@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quasim Restaurant</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<style>.flip-container {
+    perspective: 1000px;
+}
+
+.card {
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.card.flip {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+</style>
+<link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark  fixed-top">
+        <button id="done" class="btn btn-success"><a class="nav-link" href="#result" id="done_link">done</a></button>
+        <a class="navbar-brand" href="#home">Quasim Menu</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+            
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#braai_platters">Braai_platters</a></li>
+                <li class="nav-item"><a class="nav-link" href="#pasta_menue">Pasta_menue</a></li>
+                <li class="nav-item"><a class="nav-link" href="#pizza_menue">Pizza_menue</a></li>
+                
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Sections -->
+    <div id="home" class="section">
+        <div class="container text-center">
+            
+        </div>
+    </div>
+    
+<br>
+                
+                
+    
+    <div id="braai_platters" class="section">
+        <div class="container">
+            <h2>BRAAI PLATTERS</h2>
+            <div class="row">
+                <!-- Chicken Dish Example -->
+                <div class="col-md-4" id="baarix">
+                     
+    
+                
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="form" id="form" >
+        
+        <div class="form-group">
+            <label for="name">name</label>
+            <input type="text" id="name" class="form-control" value="">
+            
+        </div>
+        <div class="form-group">
+            <label for="price">price</label>
+            <input type="text" id="price" class="form-control">
+            
+        </div>
+        <div class="form-group">
+            <label for="description">description</label>
+           
+            <br>
+            
+            <input type="text" id="description" class="form-control">
+            <br>
+            <br>
+            <button class=" btn btn-success " id="sendData" >send</button>
+            <button class=" btn btn-success " id="editButton" >edit</button>
+            <button class=" btn btn-success " id="deleteButton" >delete</button>
+            <button class=" btn btn-success " id="loadButton" >load</button>
+            
+        </div>
+
+
+    </div>    
+    
+    <br>
+    
+    <br>
+    
+    <div class="container" id="result" style="display: none;" >
+        <!-- Other elements here -->
+        <p id="title_p" >verfie your order</p>
+        <p class="details" style="display: none;" >__________________________________          </p>
+    
+        <p id="all" style="border: none; border-top: 2px solid #333;" ></p>
+        
+        <p id="allCounters" class="details" style="border: none; border-top: 2px solid #333;" >Total: 0</p>
+        
+        <button class="btn btn-success m-1" id="sendButton" >send the order</button>
+    
+        <p id="doneParagraph" ></p>
+      
+    </div>
+    
+    
+    <!-- Footer -->
+    <footer class="text-center py-4">
+        
+        <p>thank you to visit us</p>
+        <p>&copy; 2024 Your Restaurant</p>
+    
+    </footer>
+    
+    
+
+<!-- Bootstrap and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+<script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
+    import { getDatabase, ref, set, get, update, remove, child } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+  
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCByclYBfPy-_i5IVufDcICMh_xIzzoRhc",
+  authDomain: "hashim-cce77.firebaseapp.com",
+  databaseURL: "https://hashim-cce77-default-rtdb.firebaseio.com",
+  projectId: "hashim-cce77",
+  storageBucket: "hashim-cce77.firebasestorage.app",
+  messagingSenderId: "925528627038",
+  appId: "1:925528627038:web:0c295a5689db8fb5e621cf",
+  measurementId: "G-MMBQ9R40H0"
+};
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Initialize Realtime Database and get a reference to the service
+    const db = getDatabase(app);
+
+
+    const name = document.getElementById('name');
+        const price = document.getElementById('price');
+        const description = document.getElementById('description');
+
+
+  
+    // CRUD Functions
+    function createOrUpdateData() {
+
+
+            set(ref(db, 'people/' + name.value), {
+            
+        
+            Name: name.value,
+            Price: price.value,
+            Desc: description.value,
+
+        })
+       
+        .then(() => {
+            alert('Data added/updated in the database successfully');
+            name.value = '';
+            price.value = '';
+            description.value = '';
+            
+        })
+        .catch((error) => {
+            console.error("Error adding/updating document: ", error);
+        });
+
+       
+
+    }
+
+
+
+    function editData() {
+
+
+        
+            const dbRef = ref(db);
+get(child(dbRef, `people/${name.value}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+const data = snapshot.val(); // Let the data = the value received from Firebase
+name.value = data.Name;
+price.value = data.Price;
+description.value = data.Desc;
+
+//location.innerHTML = `<a href="${data.Link}">location</a>`; // Corrected the template literal syntax
+console.log(data);
+}
+else {
+        console.log("No data available");
+    }
+}).catch((error) => {
+    console.error("Error reading document: ", error);
+});
+
+
+}
+
+
+function deleteData() {
+    const name = document.getElementById('name');
+            remove(ref(db, 'people/' + name.value))
+            .then(() => {
+            alert('Data has ben deleted from the database successfully');
+            name.value = '';
+            price.value = '';
+            description.value = '';
+            
+        })
+
+
+            .catch((error) => {
+                console.error("Error deleting document: ", error);
+            });
+        }
+
+
+
+        function loadPeople() {
+    const db = getDatabase();
+    const peopleRef = ref(db, 'people');
+
+
+    get(peopleRef).then(snapshot => {
+        if (snapshot.exists()) {
+            snapshot.forEach(childSnapshot => {
+                const person = childSnapshot.val();
+
+                const maiDiv = document.getElementById('baarix');
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('card', 'mb-3');
+                maiDiv.appendChild(productDiv);
+
+                const flipDiv = document.createElement('div');
+                flipDiv.classList.add('flip-container');
+                productDiv.appendChild(flipDiv);
+
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('card');
+                flipDiv.appendChild(cardDiv);
+
+                cardDiv.innerHTML = `<div class="card-front p-3">
+                        <div class="hd_card d-flex align-items-center justify-content-between w-100">
+                            <h3 class="m-0">${person.Name} <br> <small>${person.Price}</small></h3>
+                            <button class="flip-button btn btn-success">click</button>
+                        </div>
+                    </div>
+                    <div class="card-back p-3">
+                        <h5>${person.Name}</h5>
+                        <p class="price">${person.Desc}</p>
+                        <div class="d-flex align-items-center">             
+                        <button class="orderButton btn btn-danger m-1" >cancel</button>
+                            
+                        </div>
+                    </div>`;
+
+                // Add flip event to the flip button
+                const flipButton = cardDiv.querySelector('.flip-button');
+                flipButton.addEventListener('click', () => {
+                    cardDiv.classList.toggle('flip');
+                });
+
+                              // Add flip event to the flip button
+              const orderButton = cardDiv.querySelector('.orderButton');
+              orderButton.addEventListener('click', () => {
+                    cardDiv.classList.toggle('flip');
+                        // Find the counter element within the same card (or use a specific selector)
+                });
+
+
+
+
+
+
+            });
+        } else {
+            console.log("No data available");
+        }
+    }).catch(error => {
+        console.error("Error fetching data: ", error);
+    });
+}
+
+        
+
+const sendData = document.getElementById('sendData');
+sendData.addEventListener('click', createOrUpdateData);
+
+const editButton = document.getElementById('editButton');
+editButton.addEventListener('click', editData);
+
+
+const deleteButton = document.getElementById('deleteButton');
+deleteButton.addEventListener('click', deleteData);
+
+
+const loadButton = document.getElementById('loadButton');
+loadButton.addEventListener('click', loadPeople);
+
+
+
+
+
+</script>
+
+    
+
+</body>
+</html>

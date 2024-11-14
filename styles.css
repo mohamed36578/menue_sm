@@ -1,0 +1,157 @@
+        /* Add some custom styling */
+        body {
+            font-family: sans-serif;
+            font-weight: bolder;
+            font-style: unset;
+            background-color: white;
+            color: black;
+            
+        }
+        .section {
+            padding: 60px 0;
+        }
+        .section h2 {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        /* Customize section colors */
+        #home { background-color: orange; 
+            background: url('img/quasim.jpg') no-repeat center center;
+            /*  */
+            background-size: cover;
+            color: rgba(102, 20, 20, 0.863);
+            text-align: center;
+            padding: 100px 0;
+            border-radius: 15px;
+        }
+        #braai_platters { background-color: orange; 
+            background: url('img/braai.jpg') no-repeat center center;
+            background-size: cover;
+            border-radius: 15px;}
+        #pasta_menue { background-color: orange; 
+            background: url('img/pasta.jpg') no-repeat center center;
+            background-size: cover;
+            border-radius: 15px;}
+        #pizza_menue { background-color: orange; 
+            background: url('img/pizza_1.jpg') no-repeat center center;
+            background-size: cover;
+            border-radius: 15px;}
+
+
+
+        h2{
+             background-color:  rgba(65, 63, 63, 0.938);
+            color: #ececec;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 20px;
+            
+
+
+        }
+        .container {
+            perspective: 1000px;
+            margin-bottom: 20px; /* Add some space between cards */
+            width: 100%;
+        }
+
+        /* Flippable card */
+        .card {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            border: none;
+            background-color: rgba(95, 94, 94, 0); /* 50% opacity */
+            border-radius: 10px;
+            color: white;
+        }
+
+        /* Flip when class 'flipped' is added */
+        .card.flipped {
+            transform: rotateY(180deg); 
+        }
+
+        /* Front and back styles */
+        .card-front, .card-back {
+            position: absolute;
+            backface-visibility: hidden;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 10px;
+            background-color: rgba(65, 63, 63, 0.5);
+            border: white solid 2px;
+            
+            
+        
+        }
+
+        /* Back of the card */
+        .card-back {
+            transform: rotateY(180deg);
+            color: white;
+            
+            
+            
+        }
+        #done_link{
+            color: white;
+        }
+ 
+
+        small{
+            font-size: 15px;
+        }
+        a{
+            text-align: center;
+            color:white ;
+        }
+        .btn{
+            height: 80%;
+            width: max-content;
+            
+            text-align: center;
+            border: 2px white solid;
+            color: white;
+            
+            border-radius: 15px;
+            background-color: rgb(243, 200, 11);
+            
+            
+        }
+
+   
+        button:focus, .btn:focus {
+            outline: none;
+            box-shadow: none;
+            border: white 2px solid;
+            background-color: rgb(243, 200, 11);
+            
+        }
+        .orderButton, .moinsButton {
+            background-color: red;
+        }
+
+        .orderButton:focus, .moinsButton:focus {
+            background-color: red;
+        }
+        .navbar{
+            background-color: rgb(51, 50, 50);
+            
+        }
+        footer{
+            color: black;
+        }
+        .flip-button{
+            height: 50px;
+            border: 2px white solid;
+            color: white;
+        }
+        
+        
+    
