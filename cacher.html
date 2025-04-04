@@ -6,11 +6,32 @@
   <title>QR Code Scanner</title>
   <script src="https://unpkg.com/html5-qrcode" defer></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background: black;
+    color: white;
+}
+
+.cardsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px;
+    width: 300px;
+    text-align: center;
+}
 
     #reader {
       width: 300px;
@@ -18,23 +39,17 @@
     }
 
     .select-btn {
-      color: black;
+      color: white;
       background-color: transparent;
-      border-bottom: solid 2px black;
-      border-left: black 2px solid;
-      border-radius: 15px;
+      border-bottom: solid 2px white;
+      border-left:white 2px solid;
+      border-radius: 5px;
       border-top: none;
-      display: block;
-      margin: 10px auto;
+      
+      
     }
 
-    .card {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px auto;
-      width: 300px;
-    }
+
 
     .card input {
       width: 80%;
@@ -44,22 +59,27 @@
   </style>
 </head>
 <body>
-  <h1>QR Code Scanner</h1>
+  <h1>Slim-tech Cacher</h1>
+    <!-- Show all results -->
+<div style="margin-top: 30px;">
+    <button class="select-btn" onclick="showAllResults()">ok</button>
+    <p id="allResults"></p>
+  </div>
   <div id="reader"></div>
+
+    <!-- Container for generated cards -->
+    <div id="cardsContainer"></div>
 
   <!-- Input to create a new card -->
   <div>
-    <input type="text" id="cardNumberInput" placeholder="Enter card number" />
-    <button onclick="addCard()">Add Card</button>
+    <label for="cardNumberInput">Nom du client ou numéro de table</label>
+    <br>
+    <input type="text" id="cardNumberInput" placeholder="Écrivez ici" />
+    <button class="select-btn" onclick="addCard()">Ajouter</button>
   </div>
 
-  <!-- Container for generated cards -->
-  <div id="cardsContainer"></div>
-  <!-- Show all results -->
-<div style="margin-top: 30px;">
-    <button onclick="showAllResults()">Show All Cards & Results</button>
-    <p id="allResults"></p>
-  </div>
+
+
   
 
   <script>
@@ -95,9 +115,9 @@
   const resultId = "result" + (++cardCount);
   const cardHtml = `
     <div class="card">
-      <p><strong>Card Name:</strong> ${cardNumber}</p>
-      <p id="${resultId}" data-name="${cardNumber}">Scan a QR code to see the result here.</p>
-      <button class="select-btn" onclick="scann('${resultId}')">Click to Scan</button>
+      <p><strong>Commander pour: </strong> ${cardNumber}</p>
+      <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR pour voir le résultat ici.</p>
+      <button class="select-btn" onclick="scann('${resultId}')">Cliquez pour scanner</button>
     </div>
   `;
 
@@ -111,7 +131,7 @@ function showAllResults() {
 
   resultParagraphs.forEach(p => {
     const name = p.getAttribute("data-name");
-    const content = p.textContent.replace("Scan a QR code to see the result here.", "No result");
+    const content = p.textContent.replace("Cliquez pour scanner", "No result");
     output += `Card: ${name} — ${content}\n`;
   });
 
