@@ -67,16 +67,19 @@ body {
   </div>
   <div id="reader"></div>
 
+    <!-- Input to create a new card -->
+    <div>
+        <label for="cardNumberInput">Nom du client ou numéro de table</label>
+        <br>
+        <input type="text" id="cardNumberInput" placeholder="Écrivez ici" />
+        <button class="select-btn" onclick="addCard()">Ajouter</button>
+      </div>
+      
+
     <!-- Container for generated cards -->
     <div id="cardsContainer"></div>
 
-  <!-- Input to create a new card -->
-  <div>
-    <label for="cardNumberInput">Nom du client ou numéro de table</label>
-    <br>
-    <input type="text" id="cardNumberInput" placeholder="Écrivez ici" />
-    <button class="select-btn" onclick="addCard()">Ajouter</button>
-  </div>
+
 
 
 
