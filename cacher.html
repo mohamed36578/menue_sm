@@ -63,7 +63,7 @@ body {
     <!-- Show all results -->
 <div style="margin-top: 30px;">
     <button class="select-btn" onclick="showAllResults()">ok</button>
-    <p id="allResults"></p>
+    <p style="display: none;" id="allResults"></p>
   </div>
   <div id="reader"></div>
 
@@ -86,6 +86,23 @@ body {
   
 
   <script>
+    function sendToWhatsApp() {
+  const content = document.getElementById("allResults").textContent.trim();
+
+  if (content === "") {
+    alert("There is no content to send.");
+    return;
+  }
+
+  // Replace with the phone number you want to send the message to
+  const phoneNumber = "762357329"; // Include the country code (e.g., +1 for USA, +44 for UK, etc.)
+
+  // Create WhatsApp URL with the phone number and the content
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(content)}`;
+
+  // Open WhatsApp with the message pre-filled
+  window.open(whatsappUrl, "_blank");
+}
     let cardCount = 0;
   
     function scann(resultId) {
@@ -139,6 +156,7 @@ function showAllResults() {
   });
 
   document.getElementById("allResults").textContent = output.trim();
+  sendToWhatsApp();
 }
 
 
