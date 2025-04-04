@@ -97,7 +97,7 @@ body {
             qrbox: { width: 250, height: 250 },
           },
           (qrCodeMessage) => {
-            document.getElementById(resultId).innerText = "Scanned: " + qrCodeMessage;
+            document.getElementById(resultId).innerText =  qrCodeMessage;
             html5QrCode.stop();
           },
           (errorMessage) => {
