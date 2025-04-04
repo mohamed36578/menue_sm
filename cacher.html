@@ -1,48 +1,125 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner</title>
-    <script src="https://unpkg.com/html5-qrcode" defer></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        #reader {
-            width: 300px;
-            margin: auto;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #reader {
+      width: 300px;
+      margin: auto;
+    }
+
+    .select-btn {
+      color: black;
+      background-color: transparent;
+      border-bottom: solid 2px black;
+      border-left: black 2px solid;
+      border-radius: 15px;
+      border-top: none;
+      display: block;
+      margin: 10px auto;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px auto;
+      width: 300px;
+    }
+
+    .card input {
+      width: 80%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>QR Code Scanner</h1>
-    <div id="reader"></div>
-    <p id="result">Scan a QR code to see the result here.</p><script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-            { facingMode: "environment" },
-            {
-                fps: 10,    // Frames per second
-                qrbox: { width: 250, height: 250 }  // Size of QR scanning box
-            },
-            qrCodeMessage => {
-              
-                document.getElementById("result").innerText = "Scanned: " +  qrCodeMessage;
-            },
-            errorMessage => {
-                console.warn(errorMessage);
-            }
-        ).catch(err => console.error(err));
-    });
-</script>
+  <h1>QR Code Scanner</h1>
+  <div id="reader"></div>
 
+  <!-- Input to create a new card -->
+  <div>
+    <input type="text" id="cardNumberInput" placeholder="Enter card number" />
+    <button onclick="addCard()">Add Card</button>
+  </div>
+
+  <!-- Container for generated cards -->
+  <div id="cardsContainer"></div>
+  <!-- Show all results -->
+<div style="margin-top: 30px;">
+    <button onclick="showAllResults()">Show All Cards & Results</button>
+    <p id="allResults"></p>
+  </div>
+  
+
+  <script>
+    let cardCount = 0;
+  
+    function scann(resultId) {
+      const html5QrCode = new Html5Qrcode("reader");
+      html5QrCode
+        .start(
+          { facingMode: "environment" },
+          {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+          },
+          (qrCodeMessage) => {
+            document.getElementById(resultId).innerText = "Scanned: " + qrCodeMessage;
+            html5QrCode.stop();
+          },
+          (errorMessage) => {
+            console.warn(errorMessage);
+          }
+        )
+        .catch((err) => console.error(err));
+    }
+  
+    function addCard() {
+  const cardNumber = document.getElementById("cardNumberInput").value.trim();
+  if (cardNumber === "") {
+    alert("Please enter a card name.");
+    return;
+  }
+
+  const resultId = "result" + (++cardCount);
+  const cardHtml = `
+    <div class="card">
+      <p><strong>Card Name:</strong> ${cardNumber}</p>
+      <p id="${resultId}" data-name="${cardNumber}">Scan a QR code to see the result here.</p>
+      <button class="select-btn" onclick="scann('${resultId}')">Click to Scan</button>
+    </div>
+  `;
+
+  document.getElementById("cardsContainer").insertAdjacentHTML("beforeend", cardHtml);
+  document.getElementById("cardNumberInput").value = "";
+}
+
+function showAllResults() {
+  const resultParagraphs = document.querySelectorAll("#cardsContainer p[id^='result']");
+  let output = "";
+
+  resultParagraphs.forEach(p => {
+    const name = p.getAttribute("data-name");
+    const content = p.textContent.replace("Scan a QR code to see the result here.", "No result");
+    output += `Card: ${name} — ${content}\n`;
+  });
+
+  document.getElementById("allResults").textContent = output.trim();
+}
+
+
+  </script>
+  
 </body>
 </html>
