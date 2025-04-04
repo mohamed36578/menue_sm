@@ -93,7 +93,8 @@ body {
     alert("There is no content to send.");
     return;
   }
-
+      //remoove the extra spaces
+  content = content.replace(/\s+/g, ' ').trim();
   // Replace with the phone number you want to send the message to
   const phoneNumber = "762357329"; // Include the country code (e.g., +1 for USA, +44 for UK, etc.)
 
