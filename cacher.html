@@ -134,7 +134,7 @@ function showAllResults() {
   resultParagraphs.forEach(p => {
     const name = p.getAttribute("data-name");
     const content = p.textContent.replace("Cliquez pour scanner", "No result");
-    output += `Card: ${name} — ${content}\n`;
+    output += `Commander pour: ${name} — ${content}\n`;
   });
 
   document.getElementById("allResults").textContent = output.trim();
