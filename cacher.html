@@ -3,44 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manual Input Mode</title>
-  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script> <!-- QR scanner library -->
+  <title>QR Code Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: white;
-      color: black;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 0;
-      padding: 20px;
-    }
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    margin: 0;
+    background: white;
+    color: black;
+}
 
-    h1 {
-      margin-bottom: 20px;
+.cardsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.card {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px;
+    width: 300px;
+    text-align: center;
+}
+
+    #reader {
+      width: 300px;
+      margin: auto;
     }
 
     .select-btn {
       color: black;
       background-color: transparent;
       border-bottom: solid 2px black;
-      border-left: black 2px solid;
+      border-left:black 2px solid;
       border-radius: 5px;
-      padding: 5px 10px;
-      cursor: pointer;
-      margin: 10px;
+      border-top: none;
+      
+      
     }
 
-    .card {
-      border: 1px solid black;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px;
-      width: 320px;
-      text-align: center;
-    }
 
+
+    .card input {
+      width: 80%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -52,60 +67,76 @@
       padding: 6px;
       text-align: left;
     }
-
-    input {
-      padding: 5px;
-      margin-top: 10px;
-      width: 90%;
-    }
-
-    #qr-reader {
-      width: 100%;
-      height: 200px;
-      display: none;
-    }
-
-    #qr-result {
-      margin-top: 10px;
-    }
   </style>
 </head>
 <body>
-
-  <h1>Slim-tech Cacher (Input Mode)</h1>
-
-  <div>
-    <button class="select-btn" onclick="showAllResults()">Afficher tout</button>
-    <p id="allResults" style="white-space: pre-line;"></p>
+  <h1>Slim-tech Cacher</h1>
+    <!-- Show all results -->
+<div style="margin-top: 30px;">
+    <button class="select-btn" onclick="showAllResults()">ok</button>
+    <p style="display: none;" id="allResults"></p>
   </div>
+  <div id="reader"></div>
 
-  <label for="cardNumberInput">Nom du client ou numéro de table</label><br>
-  <input type="text" id="cardNumberInput" placeholder="Écrivez ici" />
-  <button class="select-btn" onclick="addCard()">Ajouter</button>
+    <!-- Input to create a new card -->
+    <div>
+        <label for="cardNumberInput">Nom du client ou numéro de table</label>
+        <br>
+        <input type="text" id="cardNumberInput" placeholder="Écrivez ici" />
+        <button class="select-btn" onclick="addCard()">Ajouter</button>
+      </div>
 
-  <div id="cardsContainer"></div>
+
+    <!-- Container for generated cards -->
+    <div id="cardsContainer"></div>
+
+
+
+
+
+  
 
   <script>
+
+
+
     let cardCount = 0;
-
+  
+    function scann(resultId) {
+      const html5QrCode = new Html5Qrcode("reader");
+      html5QrCode
+        .start(
+          { facingMode: "environment" },
+          {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+          },
+          (qrCodeMessage) => {
+            document.getElementById(resultId).innerText =  qrCodeMessage;
+            html5QrCode.stop();
+          },
+          (errorMessage) => {
+            console.warn(errorMessage);
+          }
+        )
+        .catch((err) => console.error(err));
+    }
+  
     function addCard() {
-      const cardNumber = document.getElementById("cardNumberInput").value.trim();
-      if (cardNumber === "") {
-        alert("Veuillez entrer un nom.");
-        return;
-      }
+  const cardNumber = document.getElementById("cardNumberInput").value.trim();
+  if (cardNumber === "") {
+    alert("Please enter a card name.");
+    return;
+  }
 
-      const resultId = "result" + (++cardCount);
-      const tableBodyId = "tableBody" + cardCount;
-      const inputId = "manualInput" + cardCount;
-      const qrReaderId = "qrReader" + cardCount; // Unique ID for QR reader
-
-      const cardHtml = `
-        <div class="card">
-          <p><strong>Commander pour:</strong> ${cardNumber}</p>
-          <p id="${resultId}" data-name="${cardNumber}">Entrez manuellement les données ci-dessous.</p>
-          <input type="text" id="${inputId}" placeholder="Ex: 123 apple 456 banana" />
-          <button class="select-btn" onclick="processManualInput('${inputId}', '${resultId}', '${tableBodyId}')">Ajouter</button>
+  const resultId = "result" + (++cardCount);
+  const tableBodyId = "tableBody" + cardCount;
+  const cardHtml = `
+    <div class="card">
+      <p><strong>Commander pour: </strong> ${cardNumber}</p>
+      <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
+      <button class="select-btn" onclick="scann('${resultId}')">Cliquez pour scanner</button>
+      <button class="select-btn" onclick="processManualInput('${resultId}', '${tableBodyId}')">Ajouter</button>
           <table>
             <thead>
               <tr>
@@ -115,22 +146,19 @@
             </thead>
             <tbody id="${tableBodyId}"></tbody>
           </table>
-          <!-- QR Code scanner section -->
-          <button class="select-btn" onclick="startQRCodeScanner('${qrReaderId}', '${resultId}')">Scanner le QR Code</button>
-          <div id="${qrReaderId}"></div>
-          <p id="qr-result-${cardCount}" style="margin-top: 10px;"></p>
-        </div>
-      `;
+    </div>
+  `;
 
-      document.getElementById("cardsContainer").insertAdjacentHTML("beforeend", cardHtml);
-      document.getElementById("cardNumberInput").value = "";
-    }
+  document.getElementById("cardsContainer").insertAdjacentHTML("beforeend", cardHtml);
+  document.getElementById("cardNumberInput").value = "";
+}
 
-    function processManualInput(inputId, resultId, tableBodyId) {
-      const text = document.getElementById(inputId).value.trim();
+
+function processManualInput(resultId, tableBodyId) {
+      const text = document.getElementById(resultId).textContent.trim();
       if (text === "") return;
 
-      document.getElementById(resultId).textContent = text;
+     
 
       const parts = text.split(/\s+/);
       const numbers = [];
@@ -149,64 +177,52 @@
 
       const maxLength = Math.max(numbers.length, words.length);
       for (let i = 0; i < maxLength; i++) {
-        const row = document.createElement('tr');
+  const row = document.createElement('tr');
 
-        // Process number cell
-        let numberValue = numbers[i] || '';
-        if (numberValue === '111') numberValue = 'prod';
-        if (numberValue === '000') numberValue = 'test';
+  // Process number cell
+  let numberValue = numbers[i] || '';
+  if (numberValue === '111') numberValue = 'prod';
+  if (numberValue === '000') numberValue = 'test';
 
-        const numberCell = document.createElement('td');
-        numberCell.textContent = numberValue;
-        row.appendChild(numberCell);
+  const numberCell = document.createElement('td');
+  numberCell.textContent = numberValue;
+  row.appendChild(numberCell);
 
-        // Process word cell
-        let wordValue = words[i] || '';
-        if (wordValue === 'x0') wordValue = '500';
-        if (wordValue === 'a0') wordValue = '100';
+  // Process word cell
+  let wordValue = words[i] || '';
+  if (wordValue === 'x0') wordValue = '500';
+  if (wordValue === 'a0') wordValue = '100';
 
-        const wordCell = document.createElement('td');
-        wordCell.textContent = wordValue;
-        row.appendChild(wordCell);
+  const wordCell = document.createElement('td');
+  wordCell.textContent = wordValue;
+  row.appendChild(wordCell);
 
-        // Add row to table
-        tableBody.appendChild(row);
-      }
+  // Add row to table
+  tableBody.appendChild(row);
+}
 
-      document.getElementById(inputId).value = "";
+
+      document.getElementById(resultId).value = "";
     }
 
-    function showAllResults() {
-      const resultParagraphs = document.querySelectorAll("#cardsContainer p[id^='result']");
-      let output = "";
 
-      resultParagraphs.forEach(p => {
-        const name = p.getAttribute("data-name");
-        const content = p.textContent;
-        output += `Commander pour: ${name} — ${content}\n`;
-      });
+function showAllResults() {
+  const resultParagraphs = document.querySelectorAll("#cardsContainer p[id^='result']");
+  let output = "";
 
-      document.getElementById("allResults").textContent = output.trim();
-    }
+  resultParagraphs.forEach(p => {
+    const name = p.getAttribute("data-name");
+    const content = p.textContent.replace("Cliquez pour scanner", "No result");
+    output += `Commander pour: ${name} — ${content}\n`;
+    
+  });
 
-    function startQRCodeScanner(qrReaderId, resultId) {
-      const qrReader = new Html5Qrcode(qrReaderId);
-      const qrResultElement = document.getElementById("qr-result-" + qrReaderId.substring(qrReaderId.length - 1));
+  document.getElementById("allResults").textContent = output.trim();
+  
+}
 
-      qrReader.start(
-        { facingMode: "environment" }, // Use the back camera
-        { fps: 10, qrbox: 250 }, // Configurations for the scanner
-        (decodedText, decodedResult) => {
-          qrResultElement.textContent = "QR Code Scan Result: " + decodedText;
-          document.getElementById(resultId).textContent = decodedText; // Set QR result in client card info
-          qrReader.stop(); // Stop the scanner after successful scan
-        },
-        (errorMessage) => {
-          qrResultElement.textContent = "QR Code scan error: " + errorMessage;
-        }
-      );
-    }
+
   </script>
-
+  
 </body>
 </html>
