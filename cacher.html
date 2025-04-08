@@ -153,8 +153,7 @@ function showElement(id) {
   const cardHtml = `
     <div class="card">
       <p><strong>Commander pour: </strong> ${cardNumber}</p>
-      <input style="display: none;" type="text" id="${inputId}"  oninput="updateParagraph(this, '${resultId}')"  placeholder="Ex: 123 apple 456 banana" />
-      <button class="select-btn" onclick="showElement('${inputId}')">manuel</button>
+      <input type="text" id="${inputId}"  oninput="updateParagraph(this, '${resultId}')"  placeholder="Ex: 123 apple 456 banana" />
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
       <button class="select-btn" onclick="scann('${resultId}'); hideElement('${inputId}')">Cliquez pour scanner</button>
       
