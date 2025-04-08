@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: white;
+    background: yellow;
     color: black;
 }
 
@@ -128,6 +128,13 @@ function removeCommasOnPara(paraId) {
         
     
 }
+
+function removeCommasOnInp(inpId) {
+    const input = document.getElementById(inpId);
+    paragraph.value = paragraph.value.replace(/,/g, '');
+        
+    
+}
 // Call the function for any input you want
 
 
@@ -194,7 +201,7 @@ function addCard() {
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
       <button class="select-btn" onclick="updateInput('${resultId}','${inputId}'); showElement('${inputId}')">edit</button>
       <button class="select-btn" onclick="scann('${inputId}')">Cliquez pour scanner</button>
-      <button class="select-btn" onclick="removeCommasOnInput('${inputId}');processManualscann('${inputId}','${tableBodyId}')">Ajouter</button>
+      <button class="select-btn" onclick="removeCommasOnInp('${inputId}');processManualscann('${inputId}','${tableBodyId}')">Ajouter</button>
       
       <table>
         <thead>
