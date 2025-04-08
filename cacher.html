@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: white;
+    background: yellow;
     color: black;
 }
 
@@ -188,7 +188,7 @@ function addCard() {
       ></textarea>
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
       <button class="select-btn" onclick="updateInput('${resultId}','${inputId}'); showElement('${inputId}')">edit</button>
-      <button class="select-btn" onclick="scann('${resultId}'); hideElement('${inputId}')">Cliquez pour scanner</button>
+      <button class="select-btn" onclick="scann('${inputId}')">Cliquez pour scanner</button>
       <button class="select-btn" onclick="removeCommasOnPara('${resultId}'); processManualscann('${inputId}','${resultId}', '${tableBodyId}')">Ajouter</button>
       
       <table>
