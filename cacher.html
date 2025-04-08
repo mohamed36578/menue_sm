@@ -108,6 +108,26 @@ body {
           const paragraph = document.getElementById(paragraphId);
           input.value = paragraph.textContent;
         }
+
+        function removeCommasOnInput(inputId) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.addEventListener("input", function () {
+            this.value = this.value.replace(/,/g, '');
+        });
+    }
+}
+function removeCommasOnPara(paraId) {
+    const paragraph = document.getElementById(paraId);
+    paragraph.textContent = paragraph.textContent.replace(/,/g, '');
+        
+    
+}
+// Call the function for any input you want
+
+
+
+
       </script>
   <script>
 
@@ -159,12 +179,12 @@ function showElement(id) {
   const cardHtml = `
     <div class="card">
       <p><strong>Commander pour: </strong> ${cardNumber}</p>
-      <input type="text" id="${inputId}"  oninput="updateParagraph(this, '${resultId}')"  placeholder="Ex: 123 apple 456 banana" />
+      <input type="text" id="${inputId}"  oninput="updateParagraph(this, '${resultId}');removeCommasOnInput('${inputId}');"  placeholder="Ex: 123 apple 456 banana" />
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
       <button class="select-btn" onclick="updateInput('${resultId}','${inputId}'); showElement('${inputId}')">edit</button>
       <button class="select-btn" onclick="scann('${resultId}'); hideElement('${inputId}')">Cliquez pour scanner</button>
       
-      <button class="select-btn" onclick="processManualscann('${inputId}','${resultId}', '${tableBodyId}')">Ajouter</button>
+      <button class="select-btn" onclick=" removeCommasOnPara('${resultId}'); processManualscann('${inputId}','${resultId}', '${tableBodyId}')">Ajouter</button>
       
       
       
@@ -205,7 +225,9 @@ function showAllResults() {
 
 
 function processManualscann(inputId,resultId, tableBodyId) {
+  
       const text = document.getElementById(resultId).textContent.trim();
+      
       if (text === "") return;
 
      //                <th>product</th>
