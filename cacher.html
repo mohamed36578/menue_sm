@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: orange;
+    background: white;
     color: black;
 }
 
@@ -83,7 +83,7 @@ body {
     <div>
         <label for="cardNumberInput">Nom du client ou numéro de table</label>
         <br>
-        <input type="text" id="cardNumberInput" placeholder="Écrivez ici" />
+        <input  type="text" id="cardNumberInput" placeholder="Écrivez ici" /> 
         <button class="select-btn" onclick="addCard()">Ajouter</button>
       </div>
 
@@ -97,6 +97,12 @@ body {
 
   
 
+    <script>
+        function updateParagraph(inputElement, paragraphId) {
+          const paragraph = document.getElementById(paragraphId);
+          paragraph.textContent = inputElement.value;
+        }
+      </script>
   <script>
 
 
@@ -122,6 +128,17 @@ body {
         )
         .catch((err) => console.error(err));
     }
+
+    // Function to hide an element
+function hideElement(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+// Function to show an element
+function showElement(id) {
+  document.getElementById(id).style.display = 'block';
+}
+
   
     function addCard() {
   const cardNumber = document.getElementById("cardNumberInput").value.trim();
@@ -136,14 +153,15 @@ body {
   const cardHtml = `
     <div class="card">
       <p><strong>Commander pour: </strong> ${cardNumber}</p>
-      
+      <input style="display: none;" type="text" id="${inputId}"  oninput="updateParagraph(this, '${resultId}')"  placeholder="Ex: 123 apple 456 banana" />
+      <button class="select-btn" onclick="showElement('${inputId}')">manuel</button>
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
-      <button class="select-btn" onclick="scann('${resultId}')">Cliquez pour scanner</button>
+      <button class="select-btn" onclick="scann('${resultId}'); hideElement('${inputId}')">Cliquez pour scanner</button>
       
       <button class="select-btn" onclick="processManualscann('${resultId}', '${tableBodyId}')">Ajouter</button>
-      <input type="text" id="${inputId}" placeholder="Ex: 123 apple 456 banana" />
       
-      <button class="select-btn" onclick="processManualInput('${inputId}','${tableBodyId}')">Ajouter manuel</button>
+      
+      
           
           <table>
             <thead>
@@ -161,56 +179,6 @@ body {
   document.getElementById("cardNumberInput").value = "";
 }
 
-function processManualInput(inputId, tableBodyId) {
-      const text = document.getElementById(inputId).value.trim();
-      if (text === "") return;
-
-     
-
-      const parts = text.split(/\s+/);
-      const numbers = [];
-      const words = [];
-
-      parts.forEach(item => {
-        if (!isNaN(item)) {
-          numbers.push(item);
-        } else {
-          words.push(item);
-        }
-      });
-
-      const tableBody = document.getElementById(tableBodyId);
-      tableBody.innerHTML = "";
-
-      const maxLength = Math.max(numbers.length, words.length);
-      for (let i = 0; i < maxLength; i++) {
-  const row = document.createElement('tr');
-
-  // Process number cell
-  let numberValue = numbers[i] || '';
-  if (numberValue === '111') numberValue = 'prod';
-  if (numberValue === '000') numberValue = 'test';
-
-  const numberCell = document.createElement('td');
-  numberCell.textContent = numberValue;
-  row.appendChild(numberCell);
-
-  // Process word cell
-  let wordValue = words[i] || '';
-  if (wordValue === 'x0') wordValue = '500';
-  if (wordValue === 'a0') wordValue = '100';
-
-  const wordCell = document.createElement('td');
-  wordCell.textContent = wordValue;
-  row.appendChild(wordCell);
-
-  // Add row to table
-  tableBody.appendChild(row);
-}
-
-
-      document.getElementById(inputId).value = "";
-    }
 
 
 function showAllResults() {
