@@ -102,6 +102,12 @@ body {
           const paragraph = document.getElementById(paragraphId);
           paragraph.textContent = inputElement.value;
         }
+
+        function updateInput(paragraphId,inputElement ) {
+          const input = document.getElementById(inputElement);
+          const paragraph = document.getElementById(paragraphId);
+          input.value = paragraph.textContent;
+        }
       </script>
   <script>
 
@@ -155,9 +161,10 @@ function showElement(id) {
       <p><strong>Commander pour: </strong> ${cardNumber}</p>
       <input type="text" id="${inputId}"  oninput="updateParagraph(this, '${resultId}')"  placeholder="Ex: 123 apple 456 banana" />
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
+      <button class="select-btn" onclick="updateInput('${resultId}','${inputId}'); showElement('${inputId}')">edit</button>
       <button class="select-btn" onclick="scann('${resultId}'); hideElement('${inputId}')">Cliquez pour scanner</button>
       
-      <button class="select-btn" onclick="processManualscann('${resultId}', '${tableBodyId}')">Ajouter</button>
+      <button class="select-btn" onclick="processManualscann('${inputId}','${resultId}', '${tableBodyId}')">Ajouter</button>
       
       
       
@@ -165,8 +172,8 @@ function showElement(id) {
           <table>
             <thead>
               <tr>
-                <th>Nombres</th>
-                <th>Mots</th>
+                <th>product</th>
+                <th>quantity</th>
               </tr>
             </thead>
             <tbody id="${tableBodyId}"></tbody>
@@ -197,44 +204,42 @@ function showAllResults() {
 
 
 
-function processManualscann(resultId, tableBodyId) {
+function processManualscann(inputId,resultId, tableBodyId) {
       const text = document.getElementById(resultId).textContent.trim();
       if (text === "") return;
 
-     
+     //                <th>product</th>
+     //<th>quantity</th>
 
       const parts = text.split(/\s+/);
-      const numbers = [];
-      const words = [];
+      const quantitys = [];
+      const products = [];
 
       parts.forEach(item => {
         if (!isNaN(item)) {
-          numbers.push(item);
+          products.push(item);
         } else {
-          words.push(item);
+          
+          quantitys.push(item);
         }
       });
 
       const tableBody = document.getElementById(tableBodyId);
       tableBody.innerHTML = "";
 
-      const maxLength = Math.max(numbers.length, words.length);
+      const maxLength = Math.max(quantitys.length, products.length);
       for (let i = 0; i < maxLength; i++) {
   const row = document.createElement('tr');
 
   // Process number cell
-  let numberValue = numbers[i] || '';
-  if (numberValue === '111') numberValue = 'prod';
-  if (numberValue === '000') numberValue = 'test';
+  let numberValue = quantitys[i] || '';
 
   const numberCell = document.createElement('td');
   numberCell.textContent = numberValue;
   row.appendChild(numberCell);
 
   // Process word cell
-  let wordValue = words[i] || '';
-  if (wordValue === 'x0') wordValue = '500';
-  if (wordValue === 'a0') wordValue = '100';
+  let wordValue = products[i] || '';
 
   const wordCell = document.createElement('td');
   wordCell.textContent = wordValue;
@@ -245,7 +250,7 @@ function processManualscann(resultId, tableBodyId) {
 }
 
 
-      document.getElementById(resultId).value = "";
+      document.getElementById(inputId).value = "";
     }
 
 
