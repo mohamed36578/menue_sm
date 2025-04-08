@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: white;
+    background: yellow;
     color: black;
 }
 
@@ -147,7 +147,7 @@ function removeCommasOnInp(inpId) {
 
     let cardCount = 0;
   
-    function scann(resultId) {
+    function scann(inputId) {
       const html5QrCode = new Html5Qrcode("reader");
       html5QrCode
         .start(
@@ -157,7 +157,7 @@ function removeCommasOnInp(inpId) {
             qrbox: { width: 250, height: 250 },
           },
           (qrCodeMessage) => {
-            document.getElementById(resultId).innerText =  qrCodeMessage;
+            document.getElementById(inputId).innerText =  qrCodeMessage;
             html5QrCode.stop();
           },
           (errorMessage) => {
