@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: white;
+    background: blue;
     color: black;
 }
 
@@ -189,7 +189,7 @@ function addCard() {
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
       <button class="select-btn" onclick="updateInput('${resultId}','${inputId}'); showElement('${inputId}')">edit</button>
       <button class="select-btn" onclick="scann('${inputId}')">Cliquez pour scanner</button>
-      <button class="select-btn" onclick=" updateParagraph('${inputId}', '${resultId}'); removeCommasOnPara('${resultId}'); processManualscann('${inputId}','${resultId}', '${tableBodyId}')">Ajouter</button>
+      <button class="select-btn" onclick="processManualscann('${inputId}','${tableBodyId}')">Ajouter</button>
       
       <table>
         <thead>
@@ -227,9 +227,9 @@ function showAllResults() {
 
 
 
-function processManualscann(inputId,resultId, tableBodyId) {
+function processManualscann(inputId, tableBodyId) {
   
-      const text = document.getElementById(resultId).textContent.trim();
+      const text = document.getElementById(inputId).value.trim();
       
       if (text === "") return;
 
