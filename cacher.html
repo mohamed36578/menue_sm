@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: white;
+    background: orange;
     color: black;
 }
 
@@ -67,6 +67,7 @@ body {
       padding: 6px;
       text-align: left;
     }
+
   </style>
 </head>
 <body>
@@ -131,12 +132,19 @@ body {
 
   const resultId = "result" + (++cardCount);
   const tableBodyId = "tableBody" + cardCount;
+  const inputId = "manualInput" + cardCount;
   const cardHtml = `
     <div class="card">
       <p><strong>Commander pour: </strong> ${cardNumber}</p>
+      
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
       <button class="select-btn" onclick="scann('${resultId}')">Cliquez pour scanner</button>
-      <button class="select-btn" onclick="processManualInput('${resultId}', '${tableBodyId}')">Ajouter</button>
+      
+      <button class="select-btn" onclick="processManualscann('${resultId}', '${tableBodyId}')">Ajouter</button>
+      <input type="text" id="${inputId}" placeholder="Ex: 123 apple 456 banana" />
+      
+      <button class="select-btn" onclick="processManualInput('${inputId}','${tableBodyId}')">Ajouter manuel</button>
+          
           <table>
             <thead>
               <tr>
@@ -153,8 +161,76 @@ body {
   document.getElementById("cardNumberInput").value = "";
 }
 
+function processManualInput(inputId, tableBodyId) {
+      const text = document.getElementById(inputId).value.trim();
+      if (text === "") return;
 
-function processManualInput(resultId, tableBodyId) {
+     
+
+      const parts = text.split(/\s+/);
+      const numbers = [];
+      const words = [];
+
+      parts.forEach(item => {
+        if (!isNaN(item)) {
+          numbers.push(item);
+        } else {
+          words.push(item);
+        }
+      });
+
+      const tableBody = document.getElementById(tableBodyId);
+      tableBody.innerHTML = "";
+
+      const maxLength = Math.max(numbers.length, words.length);
+      for (let i = 0; i < maxLength; i++) {
+  const row = document.createElement('tr');
+
+  // Process number cell
+  let numberValue = numbers[i] || '';
+  if (numberValue === '111') numberValue = 'prod';
+  if (numberValue === '000') numberValue = 'test';
+
+  const numberCell = document.createElement('td');
+  numberCell.textContent = numberValue;
+  row.appendChild(numberCell);
+
+  // Process word cell
+  let wordValue = words[i] || '';
+  if (wordValue === 'x0') wordValue = '500';
+  if (wordValue === 'a0') wordValue = '100';
+
+  const wordCell = document.createElement('td');
+  wordCell.textContent = wordValue;
+  row.appendChild(wordCell);
+
+  // Add row to table
+  tableBody.appendChild(row);
+}
+
+
+      document.getElementById(inputId).value = "";
+    }
+
+
+function showAllResults() {
+  const resultParagraphs = document.querySelectorAll("#cardsContainer p[id^='result']");
+  let output = "";
+
+  resultParagraphs.forEach(p => {
+    const name = p.getAttribute("data-name");
+    const content = p.textContent.replace("Cliquez pour scanner", "No result");
+    output += `Commander pour: ${name} — ${content}\n`;
+    
+  });
+
+  document.getElementById("allResults").textContent = output.trim();
+  
+}
+
+
+
+function processManualscann(resultId, tableBodyId) {
       const text = document.getElementById(resultId).textContent.trim();
       if (text === "") return;
 
