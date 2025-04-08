@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: blue;
+    background: white;
     color: black;
 }
 
@@ -147,25 +147,56 @@ function removeCommasOnInp(inpId) {
 
     let cardCount = 0;
   
-    function scann(resultId) {
-      const html5QrCode = new Html5Qrcode("reader");
-      html5QrCode
-        .start(
-          { facingMode: "environment" },
-          {
-            fps: 10,
-            qrbox: { width: 250, height: 250 },
-          },
-          (qrCodeMessage) => {
-            document.getElementById(resultId).innerText =  qrCodeMessage;
-            
-          },
-          (errorMessage) => {
-            console.warn(errorMessage);
-          }
-        )
-        .catch((err) => console.error(err));
-    }
+    let html5QrCode; // declare globally so we can reuse or reset it
+
+    function scann(inputId) {
+  // Clear any previous content inside the reader div
+  document.getElementById("reader").innerHTML = "";
+
+  // If scanner is already initialized, clear it first
+  if (html5QrCode) {
+    html5QrCode
+      .stop()
+      .then(() => html5QrCode.clear())
+      .then(() => {
+        html5QrCode = null;
+        scann(inputId); // Retry starting the scanner
+      })
+      .catch(err => {
+        console.error("Error stopping previous scan:", err);
+        html5QrCode = null;
+        scann(inputId); // Force restart anyway
+      });
+    return;
+  }
+
+  html5QrCode = new Html5Qrcode("reader");
+
+  html5QrCode
+    .start(
+      { facingMode: "environment" },
+      {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+      },
+      (qrCodeMessage) => {
+        // Update value and stop scanner
+        document.getElementById(inputId).value = qrCodeMessage;
+        html5QrCode
+          .stop()
+          .then(() => html5QrCode.clear())
+          .then(() => {
+            html5QrCode = null;
+            document.getElementById("reader").innerHTML = ""; // Optional: clear scanner box
+          })
+          .catch((err) => console.error("Error during cleanup:", err));
+      },
+      (errorMessage) => {
+        console.warn("QR scan error:", errorMessage);
+      }
+    )
+    .catch((err) => console.error("Error starting QR scan:", err));
+}
 
     // Function to hide an element
 function hideElement(id) {
