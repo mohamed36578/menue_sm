@@ -166,7 +166,7 @@ function showElement(id) {
 }
 
   
-    function addCard() {
+function addCard() {
   const cardNumber = document.getElementById("cardNumberInput").value.trim();
   if (cardNumber === "") {
     alert("Please enter a card name.");
@@ -176,34 +176,37 @@ function showElement(id) {
   const resultId = "result" + (++cardCount);
   const tableBodyId = "tableBody" + cardCount;
   const inputId = "manualInput" + cardCount;
+  
   const cardHtml = `
     <div class="card">
       <p><strong>Commander pour: </strong> ${cardNumber}</p>
-      <input type="text" id="${inputId}"  oninput="updateParagraph(this, '${resultId}');removeCommasOnInput('${inputId}');"  placeholder="Ex: 123 apple 456 banana" />
+      <textarea id="${inputId}" 
+        oninput="updateParagraph(this, '${resultId}'); removeCommasOnInput('${inputId}');"
+        placeholder="Ex: 123 apple 456 banana"
+        rows="3"
+        style="width: 100%;"
+      ></textarea>
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
       <button class="select-btn" onclick="updateInput('${resultId}','${inputId}'); showElement('${inputId}')">edit</button>
       <button class="select-btn" onclick="scann('${resultId}'); hideElement('${inputId}')">Cliquez pour scanner</button>
+      <button class="select-btn" onclick="removeCommasOnPara('${resultId}'); processManualscann('${inputId}','${resultId}', '${tableBodyId}')">Ajouter</button>
       
-      <button class="select-btn" onclick=" removeCommasOnPara('${resultId}'); processManualscann('${inputId}','${resultId}', '${tableBodyId}')">Ajouter</button>
-      
-      
-      
-          
-          <table>
-            <thead>
-              <tr>
-                <th>product</th>
-                <th>quantity</th>
-              </tr>
-            </thead>
-            <tbody id="${tableBodyId}"></tbody>
-          </table>
+      <table>
+        <thead>
+          <tr>
+            <th>product</th>
+            <th>quantity</th>
+          </tr>
+        </thead>
+        <tbody id="${tableBodyId}"></tbody>
+      </table>
     </div>
   `;
 
   document.getElementById("cardsContainer").insertAdjacentHTML("beforeend", cardHtml);
   document.getElementById("cardNumberInput").value = "";
 }
+
 
 
 
