@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: blue;
+    background: white;
     color: black;
 }
 
@@ -103,6 +103,11 @@ body {
           paragraph.textContent = inputElement.value;
         }
 
+        function updateParagraphx(inp, paragraphId) {
+          const paragraph = document.getElementById(paragraphId);
+          paragraph.textContent = inp.value;
+        }
+
         function updateInput(paragraphId,inputElement ) {
           const input = document.getElementById(inputElement);
           const paragraph = document.getElementById(paragraphId);
@@ -189,7 +194,7 @@ function addCard() {
       <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
       <button class="select-btn" onclick="updateInput('${resultId}','${inputId}'); showElement('${inputId}')">edit</button>
       <button class="select-btn" onclick="scann('${inputId}')">Cliquez pour scanner</button>
-      <button class="select-btn" onclick="processManualscann('${inputId}','${tableBodyId}')">Ajouter</button>
+      <button class="select-btn" onclick="removeCommasOnInput('${inputId}');processManualscann('${inputId}','${tableBodyId}')">Ajouter</button>
       
       <table>
         <thead>
