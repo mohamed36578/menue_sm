@@ -13,7 +13,7 @@ body {
     justify-content: center;
     
     margin: 0;
-    background: white;
+    background: blue;
     color: black;
 }
 
@@ -147,35 +147,25 @@ function removeCommasOnInp(inpId) {
 
     let cardCount = 0;
   
-    let html5QrCode; // declare globally so we can reuse or reset it
-
-function scann(inputId) {
-  if (!html5QrCode) {
-    html5QrCode = new Html5Qrcode("reader");
-  }
-
-  html5QrCode
-    .start(
-      { facingMode: "environment" },
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-      },
-      (qrCodeMessage) => {
-        document.getElementById(inputId).innerText = qrCodeMessage;
-        html5QrCode
-          .stop()
-          .then(() => html5QrCode.clear()) // important!
-          .then(() => {
-            html5QrCode = null; // allow reinitialization next time
-          });
-      },
-      (errorMessage) => {
-        console.warn(errorMessage);
-      }
-    )
-    .catch((err) => console.error(err));
-}
+    function scann(resultId) {
+      const html5QrCode = new Html5Qrcode("reader");
+      html5QrCode
+        .start(
+          { facingMode: "environment" },
+          {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+          },
+          (qrCodeMessage) => {
+            document.getElementById(resultId).innerText =  qrCodeMessage;
+            
+          },
+          (errorMessage) => {
+            console.warn(errorMessage);
+          }
+        )
+        .catch((err) => console.error(err));
+    }
 
     // Function to hide an element
 function hideElement(id) {
