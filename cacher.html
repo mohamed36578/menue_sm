@@ -20,7 +20,7 @@
     .icon-btn {
       background: none;
       border: none;
-      color: red;
+      color:black;
       cursor: pointer;
       margin-left: 10px;
     }
@@ -150,6 +150,9 @@
 </div>
 
 <script>
+
+
+
   let dragSrcEl = null;
   function result(prev, disp_p,form, disp_f,form_t, disp_ft,card, disp_b,show, disp_sh,hidd, disp_hd){
 
@@ -167,43 +170,76 @@
     hd.style.display = disp_hd ;
 
   }
+// Helper functions
+function isTouchDevice() {
+  return 'ontouchstart' in window || navigator.maxTouchPoints;
+}
 
-  function handleDragStart(e) {
-    dragSrcEl = this;
+function getTouchPos(touchEvent) {
+  return {
+    x: touchEvent.touches[0].clientX,
+    y: touchEvent.touches[0].clientY
+  };
+}
+
+
+
+function handleDragStart(e) {
+  dragSrcEl = this;
+  
+  if (e.type === 'touchstart') {
+    e.preventDefault();
+    this.classList.add('dragging');
+  } else {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', this.outerHTML);
     this.classList.add('dragging');
   }
+}
 
-  function handleDragOver(e) {
-    e.preventDefault();
-    return false;
-  }
+function handleDragOver(e) {
+  e.preventDefault();
+  return false;
+}
 
-  function handleDrop(e) {
-    e.preventDefault();
-    if (dragSrcEl !== this) {
+function handleDrop(e) {
+  e.preventDefault();
+  if (dragSrcEl !== this) {
+    if (e.type === 'touchend') {
+      const draggedHTML = dragSrcEl.outerHTML;
+      this.insertAdjacentHTML('beforebegin', draggedHTML);
+      dragSrcEl.remove();
+    } else {
       this.insertAdjacentHTML('beforebegin', e.dataTransfer.getData('text/html'));
       dragSrcEl.remove();
-      initDragAndDrop();
-      initButtons();
-      updatePreview();
     }
+    initDragAndDrop();
+    initButtons();
+    updatePreview();
   }
+}
 
-  function handleDragEnd(e) {
-    this.classList.remove('dragging');
-  }
+function handleDragEnd(e) {
+  this.classList.remove('dragging');
+}
 
-  function initDragAndDrop() {
-    document.querySelectorAll('.draggable').forEach(item => {
-      item.addEventListener('dragstart', handleDragStart);
-      item.addEventListener('dragover', handleDragOver);
-      item.addEventListener('drop', handleDrop);
-      item.addEventListener('dragend', handleDragEnd);
-    });
-  }
-
+function initDragAndDrop() {
+  document.querySelectorAll('.draggable').forEach(item => {
+    // Mouse events
+    item.addEventListener('dragstart', handleDragStart);
+    item.addEventListener('dragover', handleDragOver);
+    item.addEventListener('drop', handleDrop);
+    item.addEventListener('dragend', handleDragEnd);
+    
+    // Touch events
+    if (isTouchDevice()) {
+      item.addEventListener('touchstart', handleDragStart, { passive: false });
+      item.addEventListener('touchmove', handleDragOver, { passive: false });
+      item.addEventListener('touchend', handleDrop);
+      item.addEventListener('touchcancel', handleDragEnd);
+    }
+  });
+}
   function createIconButtons(type) {
     return `
       <button class="icon-btn edit-${type}" title="Edit"><i class="bi bi-pencil"></i></button>
