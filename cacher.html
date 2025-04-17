@@ -1,344 +1,361 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QR Code Scanner</title>
-  <script src="https://unpkg.com/html5-qrcode" defer></script>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
   <style>
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    
-    margin: 0;
-    background: white;
-    color: black;
-}
-
-.cardsContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.card {
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 15px;
-    margin: 15px;
-    width: 300px;
-    text-align: center;
-}
-
-    #reader {
-      width: 300px;
-      margin: auto;
+    .draggable {
+      cursor: move;
     }
-
-    .select-btn {
-      color: black;
-      background-color: transparent;
-      border-bottom: solid 2px black;
-      border-left:black 2px solid;
-      border-radius: 5px;
-      border-top: none;
-      
-      
-    }
-
-
-
-    .card input {
-      width: 80%;
-      padding: 5px;
+    .card-item, .title-item {
+      padding: 10px;
       margin-bottom: 10px;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
     }
-    table {
+    .icon-btn {
+      background: none;
+      border: none;
+      color: red;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .phone-preview {
+      border: 10px solid #000;
+      border-radius: 30px;
+      width: 290px;
+      height: 570px;
+      
+      margin-top: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      background: url('https://raw.githubusercontent.com/mohamed36578/my_photo/d195ba31f38af2b0aecefab1980ad0ecb0215874/petit_dejeneurs.jpg') no-repeat center center;
+      background-size: cover;
+      color: white;
+      margin-left: 30%;
+
+    }
+    .phone-inner {
+      padding: 10px;
+
+      height: 100%;
+      
+    
+    }
+    .preview-card {
+      margin-bottom: 15px;
+      background: transparent;
+      border: none;
+      color: white;
+    }
+    .card-front,
+    .card-back {
+      position: absolute;
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
+      height: 100%;
+      border:white solid 2px;
+      border-top: none;
+      border-radius: 15px;
+      backface-visibility: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: transparent; /* 50% opacity */
+      border-left: none;
     }
 
-    th, td {
-      border: 1px solid #444;
-      padding: 6px;
-      text-align: left;
+ 
+
+    .card-back {
+      transform: rotateY(180deg);
+      position: relative; /* or absolute/fixed/sticky */
+      z-index: 10;
+      background-color: rgba(0,0,0,0.5);
+      
     }
 
+    .bgr{
+        
+                background-color: rgba(0,0,0,0.5);
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+    }
   </style>
+
 </head>
-<body>
-  <h1>Slim-tech Cacher</h1>
-    <!-- Show all results -->
-<div style="margin-top: 30px;">
-    <button class="select-btn" onclick="showAllResults()">ok</button>
-    <p style="display: none;" id="allResults"></p>
-  </div>
-  <div id="reader"></div>
+<body class="p-4">
 
-    <!-- Input to create a new card -->
-    <div>
-        <label for="cardNumberInput">Nom du client ou numéro de table</label>
-        <br>
-        <input  type="text" id="cardNumberInput" placeholder="Écrivez ici" /> 
-        <button class="select-btn" onclick="addCard()">Ajouter</button>
-      </div>
+<div class="container">
+  <h2 class="mb-4">Admin Panel</h2>
 
+  <!-- Cards Section -->
+  <div id="cardList"></div>
 
-    <!-- Container for generated cards -->
-    <div id="cardsContainer"></div>
-
-
-
-
-
-  
-
-    <script>
-        function updateParagraph(inputElement, paragraphId) {
-          const paragraph = document.getElementById(paragraphId);
-          paragraph.textContent = inputElement.value;
-        }
-
-        function updateParagraphx(inp, paragraphId) {
-          const paragraph = document.getElementById(paragraphId);
-          paragraph.textContent = inp.value;
-        }
-
-        function updateInput(paragraphId,inputElement ) {
-          const input = document.getElementById(inputElement);
-          const paragraph = document.getElementById(paragraphId);
-          input.value = paragraph.textContent;
-        }
-
-        function removeCommasOnInput(inputId) {
-    const input = document.getElementById(inputId);
-    if (input) {
-        input.addEventListener("input", function () {
-            this.value = this.value.replace(/,/g, '');
-        });
-    }
-}
-function removeCommasOnPara(paraId) {
-    const paragraph = document.getElementById(paraId);
-    paragraph.textContent = paragraph.textContent.replace(/,/g, '');
-        
-    
-}
-
-function removeCommasOnInp(inpId) {
-    const input = document.getElementById(inpId);
-    input.value = input.value.replace(/,/g, '');
-        
-    
-}
-// Call the function for any input you want
-
-
-
-
-      </script>
-  <script>
-
-
-
-    let cardCount = 0;
-  
-    let html5QrCode; // declare globally so we can reuse or reset it
-
-    function scann(inputId) {
-  // Clear any previous content inside the reader div
-  document.getElementById("reader").innerHTML = "";
-
-  // If scanner is already initialized, clear it first
-  if (html5QrCode) {
-    html5QrCode
-      .stop()
-      .then(() => html5QrCode.clear())
-      .then(() => {
-        html5QrCode = null;
-        scann(inputId); // Retry starting the scanner
-      })
-      .catch(err => {
-        console.error("Error stopping previous scan:", err);
-        html5QrCode = null;
-        scann(inputId); // Force restart anyway
-      });
-    return;
-  }
-
-  html5QrCode = new Html5Qrcode("reader");
-
-  html5QrCode
-    .start(
-      { facingMode: "environment" },
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-      },
-      (qrCodeMessage) => {
-        // Update value and stop scanner
-        document.getElementById(inputId).value = qrCodeMessage;
-        html5QrCode
-          .stop()
-          .then(() => html5QrCode.clear())
-          .then(() => {
-            html5QrCode = null;
-            document.getElementById("reader").innerHTML = ""; // Optional: clear scanner box
-          })
-          .catch((err) => console.error("Error during cleanup:", err));
-      },
-      (errorMessage) => {
-        console.warn("QR scan error:", errorMessage);
-      }
-    )
-    .catch((err) => console.error("Error starting QR scan:", err));
-}
-
-    // Function to hide an element
-function hideElement(id) {
-  document.getElementById(id).style.display = 'none';
-}
-
-// Function to show an element
-function showElement(id) {
-  document.getElementById(id).style.display = 'block';
-}
-
-  
-function addCard() {
-  const cardNumber = document.getElementById("cardNumberInput").value.trim();
-  if (cardNumber === "") {
-    alert("Please enter a card name.");
-    return;
-  }
-
-  const resultId = "result" + (++cardCount);
-  const tableBodyId = "tableBody" + cardCount;
-  const inputId = "manualInput" + cardCount;
-  
-  const cardHtml = `
-    <div class="card">
-      <p><strong>Commander pour: </strong> ${cardNumber}</p>
-      <textarea id="${inputId}" 
-        oninput="updateParagraph(this, '${resultId}'); removeCommasOnInput('${inputId}');"
-        placeholder="Ex: 123 apple 456 banana"
-        rows="3"
-        style="width: 100%;"
-      ></textarea>
-      <p id="${resultId}" data-name="${cardNumber}">Scannez un code QR</p>
-      <button class="select-btn" onclick="updateInput('${resultId}','${inputId}'); showElement('${inputId}')">edit</button>
-      <button class="select-btn" onclick="scann('${inputId}')">Cliquez pour scanner</button>
-      <button class="select-btn" onclick="removeCommasOnInp('${inputId}');processManualscann('${inputId}','${tableBodyId}')">Ajouter</button>
-      
-      <table>
-        <thead>
-          <tr>
-            <th>product</th>
-            <th>quantity</th>
-          </tr>
-        </thead>
-        <tbody id="${tableBodyId}"></tbody>
-      </table>
+  <!-- Title Form -->
+  <form id="titleForm" class="mb-4">
+    <div class="input-group">
+      <input type="text" id="titleInput" class="form-control" placeholder="Enter title" required>
+      <button type="submit" class="btn btn-primary">Add Title</button>
     </div>
-  `;
+  </form>
 
-  document.getElementById("cardsContainer").insertAdjacentHTML("beforeend", cardHtml);
-  document.getElementById("cardNumberInput").value = "";
-}
-
-
-
-
-function showAllResults() {
-  const resultParagraphs = document.querySelectorAll("#cardsContainer p[id^='result']");
-  let output = "";
-
-  resultParagraphs.forEach(p => {
-    const name = p.getAttribute("data-name");
-    const content = p.textContent.replace("Cliquez pour scanner", "No result");
-    output += `Commander pour: ${name} — ${content}\n`;
+  <!-- Card Form -->
+  <form id="cardForm" class="mb-4">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <input type="text" id="cardName" class="form-control" placeholder="Name" required>
+      </div>
+      <div class="col-md-3">
+        <input type="number" id="cardPrice" class="form-control" placeholder="Price" required>
+      </div>
+      <div class="col-md-5">
+        <input type="text" id="cardDesc" class="form-control" placeholder="Description" required>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success mt-2">Add Card</button>
     
-  });
+  </form>
+  <button id="show_result"  class="btn btn-success mt-2" onclick="result('view','block', 'titleForm','none','cardForm','none','cardList','none','show_result','none','hidd_result','block');" >show result</button>
+  <button id="hidd_result"  class="btn btn-success mt-2" style="display: none;" onclick="result('view','none', 'titleForm','block','cardForm','block','cardList','block','show_result','block','hidd_result','none');" >back</button>
 
-  document.getElementById("allResults").textContent = output.trim();
+  <!-- Phone Preview Section -->
   
-}
+  <div class="phone-preview" style="display: none;" id="view" >
+    <div class="bgr">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="phone-inner" id="phoneContent">
 
+      <!-- Dynamic content will show here -->
+    </div>
+</div>
+  </div>
 
+  <!-- Copy Button -->
+  <button style="display: none;" class="btn btn-secondary mt-3" onclick="copyPreviewHTML()">Copy Preview HTML</button>
 
-function processManualscann(inputId, tableBodyId) {
-  
-      const text = document.getElementById(inputId).value.trim();
-      
-      if (text === "") return;
+</div>
 
-     //                <th>product</th>
-     //<th>quantity</th>
+<script>
+  let dragSrcEl = null;
+  function result(prev, disp_p,form, disp_f,form_t, disp_ft,card, disp_b,show, disp_sh,hidd, disp_hd){
 
-      const parts = text.split(/\s+/);
-      const quantitys = [];
-      const products = [];
+    const p = document.getElementById(prev);
+    p.style.display = disp_p ;
+    const f = document.getElementById(form);
+    f.style.display = disp_f ;
+    const ft = document.getElementById(form_t);
+    ft.style.display = disp_ft ;
+    const b = document.getElementById(card);
+    b.style.display = disp_b ;
+    const sh = document.getElementById(show);
+    sh.style.display = disp_sh ;
+    const hd = document.getElementById(hidd);
+    hd.style.display = disp_hd ;
 
-      parts.forEach(item => {
-        if (!isNaN(item)) {
-          products.push(item);
-        } else {
-          
-          quantitys.push(item);
-        }
-      });
+  }
 
-      const tableBody = document.getElementById(tableBodyId);
-      tableBody.innerHTML = "";
+  function handleDragStart(e) {
+    dragSrcEl = this;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.outerHTML);
+    this.classList.add('dragging');
+  }
 
-      const maxLength = Math.max(quantitys.length, products.length);
-      for (let i = 0; i < maxLength; i++) {
-  const row = document.createElement('tr');
+  function handleDragOver(e) {
+    e.preventDefault();
+    return false;
+  }
 
-  // Process number cell
-  let numberValue = quantitys[i] || '';
-
-  const numberCell = document.createElement('td');
-  numberCell.textContent = numberValue;
-  row.appendChild(numberCell);
-
-  // Process word cell
-  let wordValue = products[i] || '';
-
-  const wordCell = document.createElement('td');
-  wordCell.textContent = wordValue;
-  row.appendChild(wordCell);
-
-  // Add row to table
-  tableBody.appendChild(row);
-}
-
-
-      document.getElementById(inputId).value = "";
+  function handleDrop(e) {
+    e.preventDefault();
+    if (dragSrcEl !== this) {
+      this.insertAdjacentHTML('beforebegin', e.dataTransfer.getData('text/html'));
+      dragSrcEl.remove();
+      initDragAndDrop();
+      initButtons();
+      updatePreview();
     }
+  }
 
+  function handleDragEnd(e) {
+    this.classList.remove('dragging');
+  }
 
-function showAllResults() {
-  const resultParagraphs = document.querySelectorAll("#cardsContainer p[id^='result']");
-  let output = "";
+  function initDragAndDrop() {
+    document.querySelectorAll('.draggable').forEach(item => {
+      item.addEventListener('dragstart', handleDragStart);
+      item.addEventListener('dragover', handleDragOver);
+      item.addEventListener('drop', handleDrop);
+      item.addEventListener('dragend', handleDragEnd);
+    });
+  }
 
-  resultParagraphs.forEach(p => {
-    const name = p.getAttribute("data-name");
-    const content = p.textContent.replace("Cliquez pour scanner", "No result");
-    output += `Commander pour: ${name} — ${content}\n`;
-    
+  function createIconButtons(type) {
+    return `
+      <button class="icon-btn edit-${type}" title="Edit"><i class="bi bi-pencil"></i></button>
+      <button class="icon-btn delete-${type}" title="Delete"><i class="bi bi-trash"></i></button>
+    `;
+  }
+
+  function initButtons() {
+    document.querySelectorAll('.edit-title').forEach(btn => {
+      btn.onclick = function () {
+        const item = this.parentElement;
+        const text = prompt("Edit title:", item.querySelector('span').innerText);
+        if (text) {
+          item.querySelector('span').innerText = text;
+          updatePreview();
+        }
+      };
+    });
+
+    document.querySelectorAll('.delete-title').forEach(btn => {
+      btn.onclick = function () {
+        this.parentElement.remove();
+        updatePreview();
+      };
+    });
+
+    document.querySelectorAll('.edit-card').forEach(btn => {
+      btn.onclick = function () {
+        const item = this.parentElement;
+        const name = prompt("Edit name:", item.querySelector('.card-name').innerText);
+        const price = prompt("Edit price:", item.querySelector('.card-price').innerText);
+        const desc = prompt("Edit description:", item.querySelector('.card-desc').innerText);
+        if (name && price && desc) {
+          item.querySelector('.card-name').innerText = name;
+          item.querySelector('.card-price').innerText = price;
+          item.querySelector('.card-desc').innerText = desc;
+          updatePreview();
+        }
+      };
+    });
+
+    document.querySelectorAll('.delete-card').forEach(btn => {
+      btn.onclick = function () {
+        this.parentElement.remove();
+        updatePreview();
+      };
+    });
+  }
+
+  function updatePreview() {
+  const preview = document.getElementById('phoneContent');
+  preview.innerHTML = '';
+
+  document.querySelectorAll('#cardList .draggable').forEach(el => {
+    if (el.classList.contains('title-item')) {
+      const title = document.createElement('h1');
+      title.innerText = el.querySelector('span').innerText;
+      preview.appendChild(title);
+    } else if (el.classList.contains('card-item')) {
+      const card = document.createElement('div');
+      card.className = 'card preview-card';
+      card.innerHTML = `
+      <div class="card-container">
+        <div class="flip-card">
+          <div class="card-front" onclick="flipCard(this)" >
+            
+            <span>${el.querySelector('.card-name').innerText}</span>
+            
+            <span>${el.querySelector('.card-price').innerText} CFA</span>
+            
+          </div>
+          <div class="card-back" onclick="flipCard(this)" >
+            <span><small>${el.querySelector('.card-desc').innerText}</small></span>
+            
+          </div>
+        </div>
+      </div><!-- card container -->
+      `;
+      preview.appendChild(card);
+    }
   });
-
-  document.getElementById("allResults").textContent = output.trim();
-  
 }
 
 
-  </script>
+  document.getElementById('titleForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const input = document.getElementById('titleInput');
+    const title = input.value.trim();
+    if (title) {
+      const div = document.createElement('div');
+      div.className = 'title-item draggable';
+      div.setAttribute('draggable', 'true');
+      div.innerHTML = `<span>${title}</span> ${createIconButtons('title')}`;
+      document.getElementById('cardList').appendChild(div);
+      input.value = '';
+      initDragAndDrop();
+      initButtons();
+      updatePreview();
+    }
+  });
+
+  document.getElementById('cardForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = document.getElementById('cardName').value.trim();
+    const price = document.getElementById('cardPrice').value.trim();
+    const desc = document.getElementById('cardDesc').value.trim();
+    if (name && price && desc) {
+      const div = document.createElement('div');
+      div.className = 'card-item draggable';
+      div.setAttribute('draggable', 'true');
+      div.innerHTML = `
+        <strong class="card-name">${name}</strong> - 
+        <span class="card-price">${price}</span> CFA
+        <div class="card-desc">${desc}</div>
+        ${createIconButtons('card')}
+      `;
+      document.getElementById('cardList').appendChild(div);
+      document.getElementById('cardForm').reset();
+      initDragAndDrop();
+      initButtons();
+      updatePreview();
+    }
+  });
+
+  function copyPreviewHTML() {
+
+    const htmlContent = document.getElementById('phoneContent').innerHTML;
+    const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Preview</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-3">
+        <br>
+
+  ${htmlContent}
   
+</body>
+</html>`;
+    navigator.clipboard.writeText(fullHTML)
+      .then(() => alert("HTML copied to clipboard!"))
+      .catch(() => alert("Failed to copy HTML."));
+  }
+
+  initDragAndDrop();
+  initButtons();
+</script>
+
+<!-- Bootstrap Icons (optional) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
 </body>
 </html>
